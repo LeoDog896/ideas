@@ -28,9 +28,10 @@
                     newMessage = $messages[editingIndex];
                 } else if (event.key === "Backspace" && newMessage.length === 0) {
                     if (editingIndex === 0 && $messages.length === 1) return;
-                    if (editingIndex === $messages.length - 1) editingIndex = $messages.length - 2
-                    $messages = [...$messages.slice(0, editingIndex), ...$messages.slice(editingIndex + 1)];
+                    if (editingIndex === $messages.length - 1) editingIndex = $messages.length - 2;
                     newMessage = $messages[editingIndex]
+                    $messages = [...$messages.slice(0, editingIndex), ...$messages.slice(editingIndex + 1)];
+                    event.preventDefault();
                 }
             }}>
         {:else}
@@ -44,14 +45,16 @@
             placeholder="Enter message"
             on:keydown={(event) => {
                 if (event.key === 'Enter') {
+                    if (newMessage.length === 0) return
                     $messages = [...$messages, newMessage];
                     newMessage = '';
                 }
 
-                if (event.key === "ArrowUp") {
+                if (event.key === "ArrowUp" || (event.key === "Backspace" && newMessage.length === 0)) {
                     if (newMessage) $messages = [...$messages, newMessage];
                     editingIndex = $messages.length - 1;
                     newMessage = $messages[editingIndex];
+                    event.preventDefault();
                 }
             }}
         />
